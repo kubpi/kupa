@@ -17,9 +17,10 @@ namespace Grafika4
 
         private void AddRectangle()
         {
+            var cursorPosition = Mouse.GetPosition(Application.Current.MainWindow);
             var newRectangle = new RectangleViewModel
             {
-                Position = Mouse.GetPosition(Application.Current.MainWindow),
+                Position = new Point(cursorPosition.X - 25, cursorPosition.Y - 25),
                 Width = 50,
                 Height = 50
             };
