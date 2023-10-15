@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kubpi\\Desktop\\Grafika4\\Grafika4.csproj",
+      "projectUniqueName": "C:\\Users\\kubpi\\Desktop\\grafik\\Graphic4\\kupa\\Grafika4.csproj",
       "projectName": "Grafika4",
-      "projectPath": "C:\\Users\\kubpi\\Desktop\\Grafika4\\Grafika4.csproj",
+      "projectPath": "C:\\Users\\kubpi\\Desktop\\grafik\\Graphic4\\kupa\\Grafika4.csproj",
       "packagesPath": "C:\\Users\\kubpi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kubpi\\Desktop\\Grafika4\\obj\\",
+      "outputPath": "C:\\Users\\kubpi\\Desktop\\grafik\\Graphic4\\kupa\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kubpi\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -8,11 +8,13 @@ namespace Grafika4
     {
         public ObservableCollection<RectangleViewModel> Rectangles { get; set; }
         public ICommand AddRectangleCommand { get; }
+        public ICommand RemoveRectangleCommand { get; }
 
         public MainViewModel()
         {
             Rectangles = new ObservableCollection<RectangleViewModel>();
             AddRectangleCommand = new RelayCommand(AddRectangle);
+            RemoveRectangleCommand = new RelayCommand<RectangleViewModel>(RemoveRectangle);
         }
 
         private void AddRectangle()
@@ -27,5 +29,13 @@ namespace Grafika4
 
             Rectangles.Add(newRectangle);
         }
+        private void RemoveRectangle(RectangleViewModel rectangle)
+        {
+            if (rectangle != null)
+            {
+                Rectangles.Remove(rectangle);
+            }
+        }
+
     }
 }

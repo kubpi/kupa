@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\kubpi\Desktop\Grafika4\obj\Debug\net6.0-windows\
+C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\
 Grafika4
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-C:\Users\kubpi\Desktop\Grafika4\App.xaml
-11407045341
+C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\App.xaml
+21940794329
 
-6-456000399
+7473339313
 194101785492
-MainWindow.xaml;
+MainWindow.xaml;Window1.xaml;
 
-False
+True
 

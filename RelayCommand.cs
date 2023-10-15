@@ -27,4 +27,29 @@ namespace Grafika4
             _action();
         }
     }
+
+    public class RelayCommand<T> : ICommand
+    {
+        private readonly Action<T> _action;
+        public event EventHandler CanExecuteChanged;
+
+        public RelayCommand(Action<T> action)
+        {
+            _action = action;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            if (parameter is T typedParameter)
+            {
+                _action(typedParameter);
+            }
+        }
+    }
+
 }
