@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "fw0ZSDtqcd6cFTKW/O3D4jHyML+/E9H5JNdYEHr3PYTVr/lu58+HxOpaHpzwe/HvyIbr1MeeEgRHqa2+pLYOwQ==",
+  "dgSpecHash": "zCZ9LbsedeZAm1TQe+b9oxktLCfuvPDX4HE9cW8UPOv0kOWhpFy8XbqbtSbSkToZTHy25iE104py3QuHHOwAYg==",
   "success": true,
   "projectFilePath": "C:\\Users\\kubpi\\Desktop\\grafik\\Graphic4\\kupa\\Grafika4.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\kubpi\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.39\\microsoft.xaml.behaviors.wpf.1.1.39.nupkg.sha512"
+  ],
   "logs": []
 }

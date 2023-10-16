@@ -10,11 +10,19 @@ namespace Grafika4
         public ICommand AddRectangleCommand { get; }
         public ICommand RemoveRectangleCommand { get; }
 
+        public ICommand StartDragCommand { get; }
+        public ICommand DragCommand { get; }
+        public ICommand StopDragCommand { get; }
+
         public MainViewModel()
         {
             Rectangles = new ObservableCollection<RectangleViewModel>();
             AddRectangleCommand = new RelayCommand(AddRectangle);
             RemoveRectangleCommand = new RelayCommand<RectangleViewModel>(RemoveRectangle);
+            StartDragCommand = new RelayCommand<RectangleViewModel>(StartDrag);
+            DragCommand = new RelayCommand<RectangleViewModel>(Drag);
+            StopDragCommand = new RelayCommand<RectangleViewModel>(StopDrag);
+
         }
 
         private void AddRectangle()
@@ -37,5 +45,39 @@ namespace Grafika4
             }
         }
 
+        private void StartDrag(RectangleViewModel rectangle)
+        {
+            if (Mouse.MiddleButton == MouseButtonState.Pressed)
+            {
+                var cursorPosition = Mouse.GetPosition(Application.Current.MainWindow);
+                rectangle.IsDragging = true;
+                rectangle.StartDragPosition = cursorPosition;
+            }
+            // Przenieś przesuwany prostokąt na koniec listy, aby był wyświetlany na wierzchu
+            Rectangles.Remove(rectangle);
+            Rectangles.Add(rectangle);
+        }
+
+        private void Drag(RectangleViewModel rectangle)
+        {
+            if (rectangle.IsDragging && Mouse.MiddleButton == MouseButtonState.Pressed)
+            {
+                var currentPosition = Mouse.GetPosition(Application.Current.MainWindow);
+                var deltaX = currentPosition.X - rectangle.StartDragPosition.X;
+                var deltaY = currentPosition.Y - rectangle.StartDragPosition.Y;
+
+                rectangle.Position = new Point(rectangle.Position.X + deltaX, rectangle.Position.Y + deltaY);
+                rectangle.StartDragPosition = currentPosition;
+            }
+        }
+
+        private void StopDrag(RectangleViewModel rectangle)
+        {
+            if (Mouse.MiddleButton == MouseButtonState.Pressed)
+            {
+                rectangle.IsDragging = false;
+            }
+           
+        }
     }
 }

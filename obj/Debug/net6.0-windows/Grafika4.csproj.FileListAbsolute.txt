@@ -42,5 +42,5 @@ C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\refint\Graf
 C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\Grafika4.pdb
 C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\Grafika4.genruntimeconfig.cache
 C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\ref\Grafika4.dll
-C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\Window1.g.cs
-C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\Window1.baml
+C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\bin\Debug\net6.0-windows\Microsoft.Xaml.Behaviors.dll
+C:\Users\kubpi\Desktop\grafik\Graphic4\kupa\obj\Debug\net6.0-windows\Grafika4.csproj.CopyComplete
