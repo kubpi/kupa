@@ -16,8 +16,30 @@ namespace Grafika4
                 OnPropertyChanged(nameof(Position));
             }
         }
-        public double Width { get; set; }
-        public double Height { get; set; }
+        private double _width;
+        public double Width
+        {
+            get { return _width; }
+            set
+            {
+                _width = value;
+                OnPropertyChanged(nameof(Width));
+            }
+        }
+
+        private double _height;
+        public double Height
+        {
+            get { return _height; }
+            set
+            {
+                _height = value;
+                OnPropertyChanged(nameof(Height));
+            }
+        }
+
+
+
 
         public bool IsDragging { get; set; }
         public Point StartDragPosition { get; set; }

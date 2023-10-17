@@ -7,10 +7,13 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" KeyDown="OnKeyDown">
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
+
+
+
     <Grid>
         <Canvas Name="canvas" Background="WhiteSmoke">
             <Canvas.InputBindings>
@@ -34,12 +37,12 @@
                         <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="Green" Stroke="Black">
                             <Rectangle.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.RemoveRectangleCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
-                                
                             </Rectangle.InputBindings>
                             <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseDown">
+                                <i:EventTrigger EventName="MouseRightButtonDown">
                                     <i:InvokeCommandAction Command="{Binding Path=DataContext.StartDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
                                 </i:EventTrigger>
+
                                 <i:EventTrigger EventName="PreviewMouseMove">
                                     <i:InvokeCommandAction Command="{Binding Path=DataContext.DragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
                                 </i:EventTrigger>
@@ -47,6 +50,8 @@
                                 <i:EventTrigger EventName="MouseUp">
                                     <i:InvokeCommandAction Command="{Binding Path=DataContext.StopDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
                                 </i:EventTrigger>
+
+                                
                             </i:Interaction.Triggers>
                         </Rectangle>
                     </DataTemplate>

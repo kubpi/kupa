@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,10 +10,12 @@ namespace Grafika4
         public ObservableCollection<RectangleViewModel> Rectangles { get; set; }
         public ICommand AddRectangleCommand { get; }
         public ICommand RemoveRectangleCommand { get; }
-
         public ICommand StartDragCommand { get; }
         public ICommand DragCommand { get; }
         public ICommand StopDragCommand { get; }
+
+        public ICommand IncreaseSizeCommand { get; }
+        public ICommand DecreaseSizeCommand { get; }
 
         public MainViewModel()
         {
@@ -22,7 +25,8 @@ namespace Grafika4
             StartDragCommand = new RelayCommand<RectangleViewModel>(StartDrag);
             DragCommand = new RelayCommand<RectangleViewModel>(Drag);
             StopDragCommand = new RelayCommand<RectangleViewModel>(StopDrag);
-
+            IncreaseSizeCommand = new RelayCommand<RectangleViewModel>(IncreaseSize);
+            DecreaseSizeCommand = new RelayCommand<RectangleViewModel>(DecreaseSize);
         }
 
         private void AddRectangle()
@@ -47,7 +51,12 @@ namespace Grafika4
 
         private void StartDrag(RectangleViewModel rectangle)
         {
-            if (Mouse.MiddleButton == MouseButtonState.Pressed)
+            foreach (var rect in Rectangles)
+            {
+                rect.IsDragging = false;  // Reset flagi IsDragging dla wszystkich prostokątów
+            }
+        
+            if (Mouse.RightButton == MouseButtonState.Pressed)
             {
                 var cursorPosition = Mouse.GetPosition(Application.Current.MainWindow);
                 rectangle.IsDragging = true;
@@ -60,7 +69,7 @@ namespace Grafika4
 
         private void Drag(RectangleViewModel rectangle)
         {
-            if (rectangle.IsDragging && Mouse.MiddleButton == MouseButtonState.Pressed)
+            if (rectangle.IsDragging && Mouse.RightButton == MouseButtonState.Pressed)
             {
                 var currentPosition = Mouse.GetPosition(Application.Current.MainWindow);
                 var deltaX = currentPosition.X - rectangle.StartDragPosition.X;
@@ -73,11 +82,32 @@ namespace Grafika4
 
         private void StopDrag(RectangleViewModel rectangle)
         {
-            if (Mouse.MiddleButton == MouseButtonState.Pressed)
+            if (Mouse.RightButton == MouseButtonState.Pressed)
             {
                 rectangle.IsDragging = false;
             }
            
         }
+
+        private void IncreaseSize(RectangleViewModel rectangle)
+        {
+            if (rectangle != null)
+            {
+                rectangle.Width += 10;
+                rectangle.Height += 10;
+            }
+        }
+
+        private void DecreaseSize(RectangleViewModel rectangle)
+        {
+            if (rectangle != null && rectangle.Width > 10 && rectangle.Height > 10)
+            {
+                rectangle.Width -= 10;
+                rectangle.Height -= 10;
+            }
+        }
+
+
+
     }
 }

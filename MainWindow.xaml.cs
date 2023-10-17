@@ -25,5 +25,26 @@ namespace Grafika4
             InitializeComponent();
             DataContext = new MainViewModel();      
         }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            var viewModel = (MainViewModel)DataContext;
+            var selectedRectangle = viewModel.Rectangles.FirstOrDefault(r => r.IsDragging);  // Znajdź wybrany prostokąt
+
+            if (selectedRectangle != null)
+            {
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        viewModel.IncreaseSizeCommand.Execute(selectedRectangle);
+                        break;
+
+                    case Key.Down:
+                        viewModel.DecreaseSizeCommand.Execute(selectedRectangle);
+                        break;
+                }
+            }
+        }
+
     }
 }
