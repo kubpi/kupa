@@ -5,22 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Grafika4"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" KeyDown="OnKeyDown">
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
-
-
-
+    <Window.Resources>
+        <conv:TriangleToPointsConverter x:Key="TriangleToPointsConverter" />
+    </Window.Resources>
     <Grid>
-        <Canvas Name="canvas" Background="WhiteSmoke">
-            <Canvas.InputBindings>
-                <MouseBinding Gesture="LeftClick" Command="{Binding AddRectangleCommand}" />
-              
-            </Canvas.InputBindings>
-            <ItemsControl ItemsSource="{Binding Rectangles}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" Grid.Row="0">
+            <Button Command="{Binding AddRectangleCommand}" Content="Add Rectangle" Margin="5"/>
+            <Button Command="{Binding AddTriangleCommand}" Content="Add Triangle" Margin="5"/>
+            <Button Command="{Binding AddEllipseCommand}" Content="Add Ellipse" Margin="5"/>
+        </StackPanel>
+        <Canvas Name="canvas" Background="WhiteSmoke" Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding Shapes}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas />
@@ -34,26 +41,84 @@
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="Green" Stroke="Black">
-                            <Rectangle.InputBindings>
-                                <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.RemoveRectangleCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
-                            </Rectangle.InputBindings>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseRightButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding Path=DataContext.StartDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-                                </i:EventTrigger>
+                        <ContentControl Content="{Binding}">
+                            <ContentControl.Resources>
+                                <DataTemplate DataType="{x:Type local:RectangleViewModel}">
+                                    <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="Green" Stroke="Black">
+                                        <Rectangle.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.RemoveShapeCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                        </Rectangle.InputBindings>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseRightButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.StartDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
 
-                                <i:EventTrigger EventName="PreviewMouseMove">
-                                    <i:InvokeCommandAction Command="{Binding Path=DataContext.DragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-                                </i:EventTrigger>
+                                            <i:EventTrigger EventName="PreviewMouseMove">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.DragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
 
-                                <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding Path=DataContext.StopDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-                                </i:EventTrigger>
+                                            <i:EventTrigger EventName="MouseUp">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.StopDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
 
-                                
-                            </i:Interaction.Triggers>
-                        </Rectangle>
+
+                                        </i:Interaction.Triggers>
+                                    </Rectangle>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type local:TriangleViewModel}">
+                                    <Polygon Fill="Red" Stroke="Black">
+                                        <Polygon.Points>
+                                            <PointCollection>
+                                                <Point X="{Binding Vertex1.X}" Y="{Binding Vertex1.Y}" />
+                                                <Point X="{Binding Vertex2.X}" Y="{Binding Vertex2.Y}" />
+                                                <Point X="{Binding Vertex3.X}" Y="{Binding Vertex3.Y}" />
+                                            </PointCollection>
+                                        </Polygon.Points>
+                                        <Polygon.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.RemoveShapeCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                        </Polygon.InputBindings>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseRightButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.StartDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+
+                                            <i:EventTrigger EventName="PreviewMouseMove">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.DragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+
+                                            <i:EventTrigger EventName="MouseUp">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.StopDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+
+
+                                        </i:Interaction.Triggers>
+                                    </Polygon>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type local:EllipseViewModel}">
+                                    <Ellipse Width="{Binding RadiusX}" Height="{Binding RadiusY}" Fill="Blue" Stroke="Black">
+                                        <Ellipse.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.RemoveShapeCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                        </Ellipse.InputBindings>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseRightButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.StartDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+
+                                            <i:EventTrigger EventName="PreviewMouseMove">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.DragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+
+                                            <i:EventTrigger EventName="MouseUp">
+                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.StopDragCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+
+
+                                        </i:Interaction.Triggers>
+                                    </Ellipse>
+                                </DataTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

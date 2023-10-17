@@ -1,32 +1,37 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Shapes;
 
 namespace Grafika4
 {
     public class MainViewModel
-    {
-        public ObservableCollection<RectangleViewModel> Rectangles { get; set; }
-        public ICommand AddRectangleCommand { get; }
-        public ICommand RemoveRectangleCommand { get; }
+    {       
+        
         public ICommand StartDragCommand { get; }
         public ICommand DragCommand { get; }
         public ICommand StopDragCommand { get; }
-
         public ICommand IncreaseSizeCommand { get; }
         public ICommand DecreaseSizeCommand { get; }
 
+        public ObservableCollection<ShapeViewModel> Shapes { get; set; }
+        public ICommand AddRectangleCommand { get; }
+        public ICommand AddTriangleCommand { get; }
+        public ICommand AddEllipseCommand { get; }
+        public ICommand RemoveShapeCommand { get; }
+
         public MainViewModel()
         {
-            Rectangles = new ObservableCollection<RectangleViewModel>();
+            Shapes = new ObservableCollection<ShapeViewModel>();
             AddRectangleCommand = new RelayCommand(AddRectangle);
-            RemoveRectangleCommand = new RelayCommand<RectangleViewModel>(RemoveRectangle);
-            StartDragCommand = new RelayCommand<RectangleViewModel>(StartDrag);
-            DragCommand = new RelayCommand<RectangleViewModel>(Drag);
-            StopDragCommand = new RelayCommand<RectangleViewModel>(StopDrag);
-            IncreaseSizeCommand = new RelayCommand<RectangleViewModel>(IncreaseSize);
-            DecreaseSizeCommand = new RelayCommand<RectangleViewModel>(DecreaseSize);
+            AddTriangleCommand = new RelayCommand(AddTriangle);
+            AddEllipseCommand = new RelayCommand(AddEllipse);
+            RemoveShapeCommand = new RelayCommand<ShapeViewModel>(RemoveShape);
+            StartDragCommand = new RelayCommand<ShapeViewModel>(StartDrag);
+            DragCommand = new RelayCommand<ShapeViewModel>(Drag);
+            StopDragCommand = new RelayCommand<ShapeViewModel>(StopDrag);
+            IncreaseSizeCommand = new RelayCommand<ShapeViewModel>(IncreaseSize);
+            DecreaseSizeCommand = new RelayCommand<ShapeViewModel>(DecreaseSize);
         }
 
         private void AddRectangle()
@@ -39,71 +44,108 @@ namespace Grafika4
                 Height = 50
             };
 
-            Rectangles.Add(newRectangle);
+            Shapes.Add(newRectangle);
         }
-        private void RemoveRectangle(RectangleViewModel rectangle)
+
+        private void AddTriangle()
         {
-            if (rectangle != null)
+            var cursorPosition = Mouse.GetPosition(Application.Current.MainWindow);
+            var newTriangle = new TriangleViewModel
             {
-                Rectangles.Remove(rectangle);
+                Position = new Point(cursorPosition.X - 25, cursorPosition.Y - 25),
+                Vertex1 = new Point(cursorPosition.X - 50, cursorPosition.Y - 50),
+                Vertex2 = new Point(cursorPosition.X, cursorPosition.Y + 50),
+                Vertex3 = new Point(cursorPosition.X + 50, cursorPosition.Y - 50)
+            };
+
+            Shapes.Add(newTriangle);
+        }
+
+        private void AddEllipse()
+        {
+            var cursorPosition = Mouse.GetPosition(Application.Current.MainWindow);
+            var newEllipse = new EllipseViewModel
+            {
+                Position = new Point(cursorPosition.X - 25, cursorPosition.Y - 25),
+                RadiusX = 200,
+                RadiusY = 200
+            };
+
+            Shapes.Add(newEllipse);
+        }
+
+        private void RemoveShape(ShapeViewModel shape)
+        {
+            if (shape != null)
+            {
+                Shapes.Remove(shape);
             }
         }
 
-        private void StartDrag(RectangleViewModel rectangle)
+        private void StartDrag(ShapeViewModel shape)
         {
-            foreach (var rect in Rectangles)
+            foreach (var shp in Shapes)
             {
-                rect.IsDragging = false;  // Reset flagi IsDragging dla wszystkich prostokątów
+                shp.IsDragging = false;  // Reset flag IsDragging for all shapes
             }
-        
+
             if (Mouse.RightButton == MouseButtonState.Pressed)
             {
                 var cursorPosition = Mouse.GetPosition(Application.Current.MainWindow);
-                rectangle.IsDragging = true;
-                rectangle.StartDragPosition = cursorPosition;
+                shape.IsDragging = true;
+                shape.StartDragPosition = cursorPosition;
             }
-            // Przenieś przesuwany prostokąt na koniec listy, aby był wyświetlany na wierzchu
-            Rectangles.Remove(rectangle);
-            Rectangles.Add(rectangle);
+            // Move the dragged shape to the end of the list, so it's displayed on top
+            Shapes.Remove(shape);
+            Shapes.Add(shape);
         }
 
-        private void Drag(RectangleViewModel rectangle)
+        private void Drag(ShapeViewModel shape)
         {
-            if (rectangle.IsDragging && Mouse.RightButton == MouseButtonState.Pressed)
+            if (shape.IsDragging && Mouse.RightButton == MouseButtonState.Pressed)
             {
                 var currentPosition = Mouse.GetPosition(Application.Current.MainWindow);
-                var deltaX = currentPosition.X - rectangle.StartDragPosition.X;
-                var deltaY = currentPosition.Y - rectangle.StartDragPosition.Y;
+                var deltaX = currentPosition.X - shape.StartDragPosition.X;
+                var deltaY = currentPosition.Y - shape.StartDragPosition.Y;
 
-                rectangle.Position = new Point(rectangle.Position.X + deltaX, rectangle.Position.Y + deltaY);
-                rectangle.StartDragPosition = currentPosition;
+                shape.Position = new Point(shape.Position.X + deltaX, shape.Position.Y + deltaY);
+                shape.StartDragPosition = currentPosition;
             }
         }
 
-        private void StopDrag(RectangleViewModel rectangle)
+        private void StopDrag(ShapeViewModel shape)
         {
             if (Mouse.RightButton == MouseButtonState.Pressed)
             {
-                rectangle.IsDragging = false;
+                shape.IsDragging = false;
             }
-           
         }
 
-        private void IncreaseSize(RectangleViewModel rectangle)
+        private void IncreaseSize(ShapeViewModel shape)
         {
-            if (rectangle != null)
+            if (shape != null && shape is RectangleViewModel rectangle)
             {
                 rectangle.Width += 10;
                 rectangle.Height += 10;
             }
+            else if (shape is EllipseViewModel ellipse)
+            {
+                ellipse.RadiusX += 10;
+                ellipse.RadiusY += 10;
+            }
         }
 
-        private void DecreaseSize(RectangleViewModel rectangle)
+        private void DecreaseSize(ShapeViewModel shape)
         {
-            if (rectangle != null && rectangle.Width > 10 && rectangle.Height > 10)
+            if (shape != null && shape is RectangleViewModel rectangle && rectangle.Width > 10 && rectangle.Height > 10)
             {
                 rectangle.Width -= 10;
                 rectangle.Height -= 10;
+            }
+            else if (shape is EllipseViewModel ellipse)
+            {
+                ellipse.RadiusX -= 10;
+                ellipse.RadiusY -= 10;
             }
         }
 
